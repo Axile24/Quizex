@@ -1,6 +1,5 @@
-# QuizEx - Svensk Quiz Applikation
-
-En enkel quiz-applikation byggd med AWS Serverless Framework, med svenskt gränssnitt och interaktiv quiz-funktionalitet.
+# QuizEx
+Individuell uppgift 
 
 ## Funktioner
 
@@ -11,9 +10,7 @@ En enkel quiz-applikation byggd med AWS Serverless Framework, med svenskt gräns
 - **Svenskt gränssnitt**: Komplett svenskt språkstöd
 - **Interaktiv quiz-spelare**: Spela quiz med 3 JavaScript-frågor
 
-## Projektstruktur
 
-`
 
 ## Snabbstart
 
