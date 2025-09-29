@@ -27,7 +27,7 @@ node local-server.js
 ```
 
 ### 4. Öppna Applikationen
-Gå till `http://localhost:3000` i din webbläsare
+Gå till `http://localhost:8000` i din webbläsare
 
 ## API Endpoints
 
@@ -62,7 +62,6 @@ Gå till `http://localhost:3000` i din webbläsare
 
 ### Web Interface
 1. Open `http://localhost:3000`
-2. Use the Swedish interface to manage quizzes and users
 3. Create and play quizzes interactively
 
 
@@ -73,6 +72,14 @@ Gå till `http://localhost:3000` i din webbläsare
 - **Node.js** - Runtime
 - **Middy** - Middleware framework
 - **Serverless Framework** - Deployment
+
+--------------------------------endpoints---------------------
+Base API URL: https://zdgjj51feh.execute-api.eu-north-1.amazonaws.com
+
+https://zdgjj51feh.execute-api.eu-north-1.amazonaws.com/simple/quizzes
+https://zdgjj51feh.execute-api.eu-north-1.amazonaws.com/auth/login
+https://zdgjj51feh.execute-api.eu-north-1.amazonaws.com/auth/register
+
 
 
 
