@@ -1,0 +1,285 @@
+{
+  "info": {
+    "name": "Quiz App API Collection",
+    "description": "Complete API collection for Quiz App with all endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "https://0k1c6nt84f.execute-api.eu-north-1.amazonaws.com/auth/register",
+              "protocol": "https",
+              "host": ["0k1c6nt84f", "execute-api", "eu-north-1", "amazonaws", "com"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@quizex.com\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "https://0k1c6nt84f.execute-api.eu-north-1.amazonaws.com/auth/login",
+              "protocol": "https",
+              "host": ["0k1c6nt84f", "execute-api", "eu-north-1", "amazonaws", "com"],
+              "path": ["auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Simple Quiz Endpoints",
+      "item": [
+        {
+          "name": "Get Simple Quizzes",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://0k1c6nt84f.execute-api.eu-north-1.amazonaws.com/simple/quizzes",
+              "protocol": "https",
+              "host": ["0k1c6nt84f", "execute-api", "eu-north-1", "amazonaws", "com"],
+              "path": ["simple", "quizzes"]
+            }
+          }
+        },
+        {
+          "name": "Get Simple Quiz Questions",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://0k1c6nt84f.execute-api.eu-north-1.amazonaws.com/simple/quiz/quiz-001/questions",
+              "protocol": "https",
+              "host": ["0k1c6nt84f", "execute-api", "eu-north-1", "amazonaws", "com"],
+              "path": ["simple", "quiz", "quiz-001", "questions"]
+            }
+          }
+        },
+        {
+          "name": "Get Simple Quiz Leaderboard",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://0k1c6nt84f.execute-api.eu-north-1.amazonaws.com/simple/quiz/quiz-001/leaderboard",
+              "protocol": "https",
+              "host": ["0k1c6nt84f", "execute-api", "eu-north-1", "amazonaws", "com"],
+              "path": ["simple", "quiz", "quiz-001", "leaderboard"]
+            }
+          }
+        },
+        {
+          "name": "Simple Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@quizex.com\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "https://0k1c6nt84f.execute-api.eu-north-1.amazonaws.com/simple/login",
+              "protocol": "https",
+              "host": ["0k1c6nt84f", "execute-api", "eu-north-1", "amazonaws", "com"],
+              "path": ["simple", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Quiz Management",
+      "item": [
+        {
+          "name": "Create Quiz",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Test Quiz\",\n  \"description\": \"A test quiz for API testing\",\n  \"createdBy\": \"test@example.com\"\n}"
+            },
+            "url": {
+              "raw": "https://0k1c6nt84f.execute-api.eu-north-1.amazonaws.com/quiz",
+              "protocol": "https",
+              "host": ["0k1c6nt84f", "execute-api", "eu-north-1", "amazonaws", "com"],
+              "path": ["quiz"]
+            }
+          }
+        },
+        {
+          "name": "Get All Quizzes",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://0k1c6nt84f.execute-api.eu-north-1.amazonaws.com/quizzes",
+              "protocol": "https",
+              "host": ["0k1c6nt84f", "execute-api", "eu-north-1", "amazonaws", "com"],
+              "path": ["quizzes"]
+            }
+          }
+        },
+        {
+          "name": "Delete Quiz",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "https://0k1c6nt84f.execute-api.eu-north-1.amazonaws.com/quiz/quiz-001",
+              "protocol": "https",
+              "host": ["0k1c6nt84f", "execute-api", "eu-north-1", "amazonaws", "com"],
+              "path": ["quiz", "quiz-001"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Question Management",
+      "item": [
+        {
+          "name": "Add Question to Quiz",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question\": \"What is the capital of Sweden?\",\n  \"answer\": \"Stockholm\",\n  \"options\": [\"Stockholm\", \"Gothenburg\", \"Malmö\", \"Uppsala\"],\n  \"coordinates\": {\n    \"latitude\": 59.3293,\n    \"longitude\": 18.0686\n  }\n}"
+            },
+            "url": {
+              "raw": "https://0k1c6nt84f.execute-api.eu-north-1.amazonaws.com/quiz/quiz-001/question",
+              "protocol": "https",
+              "host": ["0k1c6nt84f", "execute-api", "eu-north-1", "amazonaws", "com"],
+              "path": ["quiz", "quiz-001", "question"]
+            }
+          }
+        },
+        {
+          "name": "Get Quiz Questions",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://0k1c6nt84f.execute-api.eu-north-1.amazonaws.com/quiz/quiz-001/questions",
+              "protocol": "https",
+              "host": ["0k1c6nt84f", "execute-api", "eu-north-1", "amazonaws", "com"],
+              "path": ["quiz", "quiz-001", "questions"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Score Management",
+      "item": [
+        {
+          "name": "Register Score",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"playerName\": \"Test Player\",\n  \"score\": 95\n}"
+            },
+            "url": {
+              "raw": "https://0k1c6nt84f.execute-api.eu-north-1.amazonaws.com/quiz/quiz-001/score",
+              "protocol": "https",
+              "host": ["0k1c6nt84f", "execute-api", "eu-north-1", "amazonaws", "com"],
+              "path": ["quiz", "quiz-001", "score"]
+            }
+          }
+        },
+        {
+          "name": "Get Leaderboard",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://0k1c6nt84f.execute-api.eu-north-1.amazonaws.com/quiz/quiz-001/leaderboard",
+              "protocol": "https",
+              "host": ["0k1c6nt84f", "execute-api", "eu-north-1", "amazonaws", "com"],
+              "path": ["quiz", "quiz-001", "leaderboard"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Management",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://0k1c6nt84f.execute-api.eu-north-1.amazonaws.com/users",
+              "protocol": "https",
+              "host": ["0k1c6nt84f", "execute-api", "eu-north-1", "amazonaws", "com"],
+              "path": ["users"]
+            }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "https://0k1c6nt84f.execute-api.eu-north-1.amazonaws.com/users/test@example.com",
+              "protocol": "https",
+              "host": ["0k1c6nt84f", "execute-api", "eu-north-1", "amazonaws", "com"],
+              "path": ["users", "test@example.com"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://0k1c6nt84f.execute-api.eu-north-1.amazonaws.com"
+    }
+  ]
+}
