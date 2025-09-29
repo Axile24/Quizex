@@ -13,23 +13,7 @@ En enkel quiz-applikation byggd med AWS Serverless Framework, med svenskt gräns
 
 ## Projektstruktur
 
-```
-QuizEx/
-├── quizex.html              # Huvudapplikation på svenska
-├── local-server.js          # Lokal utvecklingsserver
-├── collectionpostman.json   # Postman API-samling
-├── serverless.yml           # AWS Serverless konfiguration
-├── package.json             # Dependencies och scripts
-├── Functions/               # Lambda-funktioner
-│   ├── auth/               # Autentiseringsfunktioner
-│   ├── users/              # Användarhantering
-│   ├── quizzes/            # Quiz-hantering
-│   ├── questions/          # Frågehantering
-│   ├── scores/             # Poänghantering
-├── middleware/             # Middleware-funktioner
-│   └── auth.js            # Autentiserings-middleware
-└── response/               # Response utilities
-```
+`
 
 ## Snabbstart
 
@@ -53,72 +37,66 @@ Gå till `http://localhost:3000` i din webbläsare
 
 ## API Endpoints
 
-### Autentisering
-- `POST /auth/register` - Registrera ny användare
-- `POST /auth/login` - Logga in användare
+### Authentication
+- `POST /auth/register` - Register new user
+- `POST /auth/login` - User login
 
-### Quiz-hantering
-- `POST /quiz` - Skapa ny quiz
-- `GET /quizzes` - Hämta alla quizer
-- `DELETE /quiz/{id}` - Ta bort quiz
+### Simple Quiz (Hardcoded Data)
+- `GET /simple/quizzes` - Get available quizzes
+- `GET /simple/quiz/{id}/questions` - Get quiz questions
+- `GET /simple/quiz/{id}/leaderboard` - Get leaderboard
+- `POST /simple/login` - Simple login
 
-### Frågehantering
-- `POST /quiz/{id}/question` - Lägg till fråga
-- `GET /quiz/{id}/questions` - Hämta quiz-frågor
+### Quiz Management
+- `POST /quiz` - Create quiz
+- `GET /quizzes` - Get all quizzes
+- `DELETE /quiz/{id}` - Delete quiz
 
-### Poänghantering
-- `POST /quiz/{id}/score` - Registrera poäng
-- `GET /quiz/{id}/leaderboard` - Hämta topplista
+### Question Management
+- `POST /quiz/{id}/question` - Add question
+- `GET /quiz/{id}/questions` - Get questions
 
-### Enkla Endpoints
-- `GET /simple/quizzes` - Hämta quizer (publikt)
-- `GET /simple/quiz/{id}/questions` - Hämta frågor (publikt)
-- `GET /simple/quiz/{id}/leaderboard` - Hämta topplista (publikt)
-- `POST /simple/login` - Enkel inloggning
+### Score Management
+- `POST /quiz/{id}/score` - Register score
+- `GET /quiz/{id}/leaderboard` - Get leaderboard
 
-## Teknisk Stack
+### User Management
+- `GET /users` - Get all users
+- `DELETE /users/{email}` - Delete user
 
-- **Frontend**: HTML, CSS, JavaScript
-- **Backend**: AWS Lambda (Node.js 18)
-- **Database**: Amazon DynamoDB
-- **API Gateway**: AWS API Gateway
-- **Deployment**: Serverless Framework
-- **Authentication**: JWT tokens
+## Usage
 
-## Utveckling
+### Web Interface
+1. Open `http://localhost:3000`
+2. Use the Swedish interface to manage quizzes and users
+3. Create and play quizzes interactively
 
-### Lokal utveckling
+
+
+- **AWS Lambda** - Serverless functions
+- **AWS DynamoDB** - Database
+- **AWS API Gateway** - API endpoints
+- **Node.js** - Runtime
+- **Middy** - Middleware framework
+- **Serverless Framework** - Deployment
+
+
+
+### Local Development
 ```bash
-# Starta lokal server
+# Start local server
 node local-server.js
-
-# Öppna http://localhost:3000
 ```
 
-### Deploya ändringar
+### Deployment
 ```bash
-# Deploya till AWS
-npx serverless deploy
+# Deploy to AWS
+npm run deploy
 
-# Deploya enskild funktion
-npx serverless deploy function --function functionName
+# View logs
+npm run logs
+
+# Remove deployment
+npm run remove
 ```
 
-## Testdata
-
-Applikationen innehåller testdata med en "Sverige Quiz" som innehåller 3 frågor:
-1. Vad är huvudstaden i Sverige?
-2. Vilken är Sveriges största sjö?
-3. Vem är Sveriges nuvarande kung?
-
-## Licens
-
-MIT License - se LICENSE fil för detaljer.
-
-## Bidrag
-
-Bidrag är välkomna! Skapa en pull request eller öppna en issue för förslag.
-
-## Kontakt
-
-För frågor eller support, kontakta utvecklaren.
