@@ -1,55 +1,42 @@
-# QuizEx - Swedish Quiz Application
+# QuizEx - Svensk Quiz Applikation
 
-A simple quiz application built with AWS Serverless Framework, featuring a Swedish interface and interactive quiz functionality.
+En enkel quiz-applikation byggd med AWS Serverless Framework, med svenskt gränssnitt och interaktiv quiz-funktionalitet.
 
-## Features
+## Funktioner
 
-- **User Management**: Register, login, and manage users
-- **Quiz System**: Create, play, and manage quizzes
-- **Question Management**: Add questions with coordinates
-- **Score Tracking**: Register scores and view leaderboards
-- **Swedish Interface**: Complete Swedish language support
-- **Simple Quiz Player**: Interactive quiz with 3 JavaScript questions
+- **Användarhantering**: Registrera, logga in och hantera användare
+- **Quiz-system**: Skapa, spela och hantera quizer
+- **Frågehantering**: Lägg till frågor med koordinater
+- **Poängspårning**: Registrera poäng och visa topplistor
+- **Svenskt gränssnitt**: Komplett svenskt språkstöd
+- **Interaktiv quiz-spelare**: Spela quiz med 3 JavaScript-frågor
 
-## Project Structure
+## Projektstruktur
 
 ```
 QuizEx/
-├── quizex.html              # Main Swedish quiz application
-├── local-server.js          # Local development server
-├── collectionpostman.json   # Postman API collection
-├── serverless.yml           # AWS Serverless configuration
-├── package.json             # Dependencies and scripts
-├── Functions/               # Lambda functions
-│   ├── auth/               # Authentication functions
-│   ├── users/              # User management
-│   ├── quizzes/            # Quiz management
-│   ├── questions/          # Question management
-│   ├── scores/             # Score management
-├── middleware/             # Middleware functions
-│   └── auth.js            # Authentication middleware
-└── response/               # Response utilities
-```
+├── quizex.html              # Huvudapplikation på svenska
+├── local-server.js          # Lokal utveckling
 
-## Quick Start
+## Snabbstart
 
-### 1. Install Dependencies
+### 1. Installera Dependencies
 ```bash
 npm install
 ```
 
-### 2. Deploy to AWS
+### 2. Deploya till AWS
 ```bash
 npm run deploy
 ```
 
-### 3. Run Locally
+### 3. Kör Lokalt
 ```bash
 node local-server.js
 ```
 
-### 4. Open Application
-Go to `http://localhost:3000` in your browser
+### 4. Öppna Applikationen
+Gå till `http://localhost:3000` i din webbläsare
 
 ## API Endpoints
 
