@@ -1,32 +1,28 @@
 {
-  "name": "quizex",
+  "name": "quizex-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "A simple quiz app API",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "deploy": "serverless deploy",
+    "offline": "serverless offline",
+    "logs": "serverless logs",
+    "remove": "serverless remove"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Axile24/Quizex.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/Axile24/Quizex/issues"
-  },
-  "homepage": "https://github.com/Axile24/Quizex#readme",
+  "keywords": ["quiz", "api", "simple"],
+  "author": "Nadjib Amokrane",
+  "license": "MIT",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.896.0",
     "@aws-sdk/lib-dynamodb": "^3.896.0",
+    "@middy/core": "^3.6.0",
+    "@middy/http-json-body-parser": "^3.6.0",
     "bcryptjs": "^3.0.2",
     "jsonwebtoken": "^9.0.2",
-    "middy": "^0.36.0",
-    "nanoid": "^5.1.6"
+    "nanoid": "^3.3.7"
   },
   "devDependencies": {
-    "serverless": "^4.19.1"
+    "serverless": "^3.38.0",
+    "serverless-offline": "^12.0.4"
   }
 }
