@@ -1,18 +1,15 @@
 # QuizEx
-Individuell uppgift 
+Individuell examinations uppgift 
 
-## Funktioner
+## lambdas logik
 
-- **Användarhantering**: Registrera, logga in och hantera användare
-- **Quiz-system**: Skapa, spela och hantera quizer
-- **Frågehantering**: Lägg till frågor med koordinater
-- **Poängspårning**: Registrera poäng och visa topplistor
-- **Svenskt gränssnitt**: Komplett svenskt språkstöd
-- **Interaktiv quiz-spelare**: Spela quiz med 3 JavaScript-frågor
-
+Användarhantering**: Registrera, logga in och hantera användare
+Quiz-system**: Skapa, spela och hantera quizer
+Frågehantering**: Lägg till frågor med koordinater
+Poängspårning**: Registrera poäng och visa topplistor
+Interaktiv quiz-spelare**: Spela quiz med 3 JavaScript-frågor om möjligt
 
 
-## Snabbstart
 
 ### 1. Installera Dependencies
 ```bash
@@ -38,7 +35,7 @@ Gå till `http://localhost:3000` i din webbläsare
 - `POST /auth/register` - Register new user
 - `POST /auth/login` - User login
 
-### Simple Quiz (Hardcoded Data)
+### Simple Quiz
 - `GET /simple/quizzes` - Get available quizzes
 - `GET /simple/quiz/{id}/questions` - Get quiz questions
 - `GET /simple/quiz/{id}/leaderboard` - Get leaderboard

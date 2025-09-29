@@ -1,4 +1,12 @@
-/**
+/** TODO: 
+ * 1- Avoir une connexion avec DB
+ * 2- Créer une fonction pour trouver un utilisateur par email
+ * 3- Créer une fonction pour vérifier le mot de passe
+ * 4- Créer une fonction pour créer un token
+ * 5- Créer une fonction pour maintenir le login
+ * 6- Créer une fonction pour supprimer un utilisateur
+ * 7- Créer une fonction pour mettre à jour un utilisateur
+ * 8- Créer une fonction pour obtenir tous les utilisateurs
  * User login function
  * This allows existing users to log in and get a token
  */
