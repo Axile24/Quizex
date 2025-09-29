@@ -1,4 +1,4 @@
-# QuizEx - Swedish Quiz Application
+# QuizEx - Individuel Quiz uppgiften 
 
 A simple quiz application built with AWS Serverless Framework, featuring a Swedish interface and interactive quiz functionality.
 
