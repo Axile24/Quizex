@@ -1,0 +1,223 @@
+# This file tells AWS how to create our quiz app
+service: quizex
+frameworkVersion: "3"
+
+# AWS settings
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: eu-north-1
+  httpApi:
+    cors: true
+  environment:
+    JWT_SECRET: secret_password
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: 
+        - "arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/users"
+        - "arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/quizzes"
+        - "arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/questions"
+        - "arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/scores"
+
+# Package settings
+package:
+  individually: false
+  patterns:
+    - '!README.md'
+    - '!quizex.html'
+    - '!collectionpostman.json'
+    - '!local-server.js'
+    - '!.git/**'
+    - '!*.md'
+
+# Our API functions
+functions:
+  # User registration
+  signUp:
+    handler: Functions/auth/signUp.handler
+    events:
+      - httpApi:
+          path: /auth/register
+          method: POST
+
+  # User login
+  login:
+    handler: Functions/auth/login.handler
+    events:
+      - httpApi:
+          path: /auth/login
+          method: POST
+
+  # Quiz management
+  createQuiz:
+    handler: Functions/quizzes/createQuiz.handler
+    events:
+      - httpApi:
+          path: /quiz
+          method: POST
+
+  getAllQuizzes:
+    handler: Functions/quizzes/getAllQuizzes.handler
+    events:
+      - httpApi:
+          path: /quizzes
+          method: GET
+
+  deleteQuiz:
+    handler: Functions/quizzes/deleteQuiz.handler
+    events:
+      - httpApi:
+          path: /quiz/{id}
+          method: DELETE
+
+  # Question management
+  addQuestion:
+    handler: Functions/questions/addQuestion.handler
+    events:
+      - httpApi:
+          path: /quiz/{id}/question
+          method: POST
+
+  getQuizQuestions:
+    handler: Functions/questions/getQuizQuestions.handler
+    events:
+      - httpApi:
+          path: /quiz/{id}/questions
+          method: GET
+
+  # Score management
+  registerScore:
+    handler: Functions/scores/registerScore.handler
+    events:
+      - httpApi:
+          path: /quiz/{id}/score
+          method: POST
+
+  getLeaderboard:
+    handler: Functions/scores/getLeaderboard.handler
+    events:
+      - httpApi:
+          path: /quiz/{id}/leaderboard
+          method: GET
+
+  # Get all users
+  getAllUsers:
+    handler: Functions/users/getAllUsers.handler
+    events:
+      - httpApi:
+          path: /users
+          method: GET
+
+  # Delete user
+  deleteUser:
+    handler: Functions/users/deleteUser.handler
+    events:
+      - httpApi:
+          path: /users/{email}
+          method: DELETE
+
+  # Simple quiz endpoints (for public access)
+  getSimpleQuizzes:
+    handler: Functions/quizzes/getAllQuizzes.handler
+    events:
+      - httpApi:
+          path: /simple/quizzes
+          method: GET
+
+  getSimpleQuizQuestions:
+    handler: Functions/questions/getSimpleQuizQuestions.handler
+    events:
+      - httpApi:
+          path: /simple/quiz/{id}/questions
+          method: GET
+
+  getSimpleQuizLeaderboard:
+    handler: Functions/scores/getSimpleLeaderboard.handler
+    events:
+      - httpApi:
+          path: /simple/quiz/{id}/leaderboard
+          method: GET
+
+  simpleLogin:
+    handler: Functions/auth/login.handler
+    events:
+      - httpApi:
+          path: /simple/login
+          method: POST
+
+
+# Database tables
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: users
+        AttributeDefinitions:
+          - AttributeName: email
+            AttributeType: S
+        KeySchema:
+          - AttributeName: email
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+    QuizzesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: quizzes
+        AttributeDefinitions:
+          - AttributeName: quizId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: quizId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+    QuestionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: questions
+        AttributeDefinitions:
+          - AttributeName: questionId
+            AttributeType: S
+          - AttributeName: quizId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: questionId
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: quizId-index
+            KeySchema:
+              - AttributeName: quizId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+   
+
+    ScoresTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: scores
+        AttributeDefinitions:
+          - AttributeName: scoreId
+            AttributeType: S
+          - AttributeName: quizId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: scoreId
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: quizId-index
+            KeySchema:
+              - AttributeName: quizId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+        BillingMode: PAY_PER_REQUEST    BillingMode: PAY_PER_REQUEST
