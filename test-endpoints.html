@@ -110,11 +110,15 @@
                 options.body = JSON.stringify(body);
             }
 
+            console.log(`Making ${method} request to ${url}`, body ? { body } : '');
+
             try {
                 const response = await fetch(url, options);
                 const data = await response.json();
+                console.log(`API response (${response.status}):`, data);
                 return { success: response.ok, data: data, status: response.status };
             } catch (error) {
+                console.log('API call error:', error.message);
                 return { success: false, error: error.message };
             }
         }
@@ -134,9 +138,9 @@
             const name = document.getElementById('userName').value;
             const email = document.getElementById('userEmail').value;
             
-            console.log('🚀 Creating user:', { name, email });
+            console.log('Creating user:', { name, email });
             const result = await makeApiCall('/user', 'POST', { name, email });
-            console.log('✅ User creation result:', result);
+            console.log('User creation result:', result);
             displayResult('createUserResult', result);
         }
 
@@ -144,14 +148,14 @@
             const email = document.getElementById('loginEmail').value;
             const name = document.getElementById('loginName').value;
             
-            console.log('🔐 Logging in user:', { email, name });
+            console.log('Logging in user:', { email, name });
             const result = await makeApiCall('/login', 'POST', { email, name });
             if (result.success && result.data.data && result.data.data.token) {
                 authToken = result.data.data.token;
-                console.log('🎫 Auth token received and stored');
+                console.log('Auth token received and stored');
                 document.getElementById('testResults').innerHTML += '<p>Auth token sparad!</p>';
             }
-            console.log('✅ Login result:', result);
+            console.log('Login result:', result);
             displayResult('loginUserResult', result);
         }
 
@@ -161,30 +165,30 @@
             const description = document.getElementById('quizDescription').value;
             const createdBy = document.getElementById('quizCreatedBy').value;
             
-            console.log('📝 Creating quiz:', { title, description, createdBy });
+            console.log('Creating quiz:', { title, description, createdBy });
             const result = await makeApiCall('/quiz', 'POST', { title, description, createdBy }, true);
             if (result.success && result.data.data && result.data.data.quizId) {
-                console.log('📋 Quiz created with ID:', result.data.data.quizId);
+                console.log('Quiz created with ID:', result.data.data.quizId);
                 document.getElementById('questionQuizId').value = result.data.data.quizId;
                 document.getElementById('deleteQuizId').value = result.data.data.quizId;
                 document.getElementById('getQuestionsQuizId').value = result.data.data.quizId;
             }
-            console.log('✅ Quiz creation result:', result);
+            console.log('Quiz creation result:', result);
             displayResult('createQuizResult', result);
         }
 
         async function getAllQuizzes() {
-            console.log('📚 Getting all quizzes...');
+            console.log('Getting all quizzes...');
             const result = await makeApiCall('/quizzes', 'GET');
-            console.log('✅ All quizzes result:', result);
+            console.log('All quizzes result:', result);
             displayResult('getAllQuizzesResult', result);
         }
 
         async function deleteQuiz() {
             const quizId = document.getElementById('deleteQuizId').value;
-            console.log('🗑️ Deleting quiz with ID:', quizId);
+            console.log('Deleting quiz with ID:', quizId);
             const result = await makeApiCall(`/quiz/${quizId}`, 'DELETE', null, true);
-            console.log('✅ Quiz deletion result:', result);
+            console.log('Quiz deletion result:', result);
             displayResult('deleteQuizResult', result);
         }
 
@@ -197,6 +201,7 @@
             const latitude = document.getElementById('latitude').value;
             const longitude = document.getElementById('longitude').value;
             
+            console.log('Adding question to quiz:', { quizId, question, options, correctAnswer, latitude, longitude });
             const result = await makeApiCall(`/quiz/${quizId}/question`, 'POST', { 
                 question, 
                 options, 
@@ -204,12 +209,15 @@
                 latitude,
                 longitude
             }, true);
+            console.log('Add question result:', result);
             displayResult('addQuestionResult', result);
         }
 
         async function getQuizQuestions() {
             const quizId = document.getElementById('getQuestionsQuizId').value;
+            console.log('Getting quiz questions for quiz ID:', quizId);
             const result = await makeApiCall(`/quiz/${quizId}/questions`, 'GET');
+            console.log('Quiz questions result:', result);
             displayResult('getQuestionsResult', result);
         }
 
@@ -218,21 +226,26 @@
             const quizId = document.getElementById('scoreQuizId').value;
             const score = document.getElementById('scoreValue').value;
             
+            console.log('Registering score:', { quizId, score: parseInt(score) });
             const result = await makeApiCall(`/quiz/${quizId}/score`, 'POST', { 
                 quizId,
                 score: parseInt(score)
             }, true);
+            console.log('Register score result:', result);
             displayResult('registerScoreResult', result);
         }
 
         async function getLeaderboard() {
             const quizId = document.getElementById('leaderboardQuizId').value;
+            console.log('Getting leaderboard for quiz ID:', quizId);
             const result = await makeApiCall(`/quiz/${quizId}/leaderboard`, 'GET');
+            console.log('Leaderboard result:', result);
             displayResult('getLeaderboardResult', result);
         }
 
         // Testa alla endpoints funktion
         async function testAllEndpoints() {
+            console.log('Starting automated testing of all endpoints...');
             document.getElementById('testResults').innerHTML = '<h3>Kör alla tester...</h3>';
             
             // Test 1: Skapa Användare
@@ -259,6 +272,7 @@
             document.getElementById('testResults').innerHTML += '<p>6. Testar hämta quiz frågor...</p>';
             await getQuizQuestions();
             
+            console.log('All automated tests completed!');
             document.getElementById('testResults').innerHTML += '<p>Alla tester slutförda!</p>';
         }
     </script>
