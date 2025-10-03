@@ -110,11 +110,28 @@
                 options.body = JSON.stringify(body);
             }
 
+            console.log('🌐 API Request:', { 
+                method, 
+                url, 
+                body, 
+                requiresAuth, 
+                hasToken: !!authToken,
+                timestamp: new Date().toISOString() 
+            });
+
             try {
                 const response = await fetch(url, options);
                 const data = await response.json();
-                return { success: response.ok, data: data, status: response.status };
+                const result = { success: response.ok, data: data, status: response.status };
+                console.log('🌐 API Response:', { 
+                    url, 
+                    status: response.status, 
+                    success: response.ok, 
+                    timestamp: new Date().toISOString() 
+                });
+                return result;
             } catch (error) {
+                console.error('❌ API Error:', { url, error: error.message, timestamp: new Date().toISOString() });
                 return { success: false, error: error.message };
             }
         }
@@ -134,7 +151,9 @@
             const name = document.getElementById('userName').value;
             const email = document.getElementById('userEmail').value;
             
+            console.log('🚀 Creating user:', { name, email, timestamp: new Date().toISOString() });
             const result = await makeApiCall('/user', 'POST', { name, email });
+            console.log('✅ User creation result:', result);
             displayResult('createUserResult', result);
         }
 
@@ -142,11 +161,14 @@
             const email = document.getElementById('loginEmail').value;
             const name = document.getElementById('loginName').value;
             
+            console.log('🔐 Logging in user:', { email, name, timestamp: new Date().toISOString() });
             const result = await makeApiCall('/login', 'POST', { email, name });
             if (result.success && result.data.data && result.data.data.token) {
                 authToken = result.data.data.token;
+                console.log('🎫 Auth token received and stored');
                 document.getElementById('testResults').innerHTML += '<p>Auth token sparad!</p>';
             }
+            console.log('✅ Login result:', result);
             displayResult('loginUserResult', result);
         }
 
@@ -156,23 +178,30 @@
             const description = document.getElementById('quizDescription').value;
             const createdBy = document.getElementById('quizCreatedBy').value;
             
+            console.log('📝 Creating quiz:', { title, description, createdBy, timestamp: new Date().toISOString() });
             const result = await makeApiCall('/quiz', 'POST', { title, description, createdBy }, true);
             if (result.success && result.data.data && result.data.data.quizId) {
+                console.log('📋 Quiz created with ID:', result.data.data.quizId);
                 document.getElementById('questionQuizId').value = result.data.data.quizId;
                 document.getElementById('deleteQuizId').value = result.data.data.quizId;
                 document.getElementById('getQuestionsQuizId').value = result.data.data.quizId;
             }
+            console.log('✅ Quiz creation result:', result);
             displayResult('createQuizResult', result);
         }
 
         async function getAllQuizzes() {
+            console.log('📚 Fetching all quizzes:', { timestamp: new Date().toISOString() });
             const result = await makeApiCall('/quizzes', 'GET');
+            console.log('✅ Get all quizzes result:', result);
             displayResult('getAllQuizzesResult', result);
         }
 
         async function deleteQuiz() {
             const quizId = document.getElementById('deleteQuizId').value;
+            console.log('🗑️ Deleting quiz:', { quizId, timestamp: new Date().toISOString() });
             const result = await makeApiCall(`/quiz/${quizId}`, 'DELETE', null, true);
+            console.log('✅ Delete quiz result:', result);
             displayResult('deleteQuizResult', result);
         }
 
@@ -185,6 +214,7 @@
             const latitude = document.getElementById('latitude').value;
             const longitude = document.getElementById('longitude').value;
             
+            console.log('❓ Adding question to quiz:', { quizId, question, options, correctAnswer, latitude, longitude, timestamp: new Date().toISOString() });
             const result = await makeApiCall(`/quiz/${quizId}/question`, 'POST', { 
                 question, 
                 options, 
@@ -192,12 +222,15 @@
                 latitude,
                 longitude
             }, true);
+            console.log('✅ Add question result:', result);
             displayResult('addQuestionResult', result);
         }
 
         async function getQuizQuestions() {
             const quizId = document.getElementById('getQuestionsQuizId').value;
+            console.log('📋 Fetching quiz questions:', { quizId, timestamp: new Date().toISOString() });
             const result = await makeApiCall(`/quiz/${quizId}/questions`, 'GET');
+            console.log('✅ Get quiz questions result:', result);
             displayResult('getQuestionsResult', result);
         }
 
@@ -206,47 +239,59 @@
             const quizId = document.getElementById('scoreQuizId').value;
             const score = document.getElementById('scoreValue').value;
             
+            console.log('🏆 Registering score:', { quizId, score: parseInt(score), timestamp: new Date().toISOString() });
             const result = await makeApiCall(`/quiz/${quizId}/score`, 'POST', { 
                 quizId,
                 score: parseInt(score)
             }, true);
+            console.log('✅ Register score result:', result);
             displayResult('registerScoreResult', result);
         }
 
         async function getLeaderboard() {
             const quizId = document.getElementById('leaderboardQuizId').value;
+            console.log('🏅 Fetching leaderboard:', { quizId, timestamp: new Date().toISOString() });
             const result = await makeApiCall(`/quiz/${quizId}/leaderboard`, 'GET');
+            console.log('✅ Get leaderboard result:', result);
             displayResult('getLeaderboardResult', result);
         }
 
         // Testa alla endpoints funktion
         async function testAllEndpoints() {
+            console.log('🧪 Starting comprehensive API test suite:', { timestamp: new Date().toISOString() });
             document.getElementById('testResults').innerHTML = '<h3>Kör alla tester...</h3>';
             
             // Test 1: Skapa Användare
+            console.log('📝 Test 1: Creating user...');
             document.getElementById('testResults').innerHTML += '<p>1. Testar skapa användare...</p>';
             await createUser();
             
             // Test 2: Logga In Användare
+            console.log('🔐 Test 2: Logging in user...');
             document.getElementById('testResults').innerHTML += '<p>2. Testar logga in användare...</p>';
             await loginUser();
             
             // Test 3: Skapa Quiz
+            console.log('📝 Test 3: Creating quiz...');
             document.getElementById('testResults').innerHTML += '<p>3. Testar skapa quiz...</p>';
             await createQuiz();
             
             // Test 4: Hämta Alla Quizer
+            console.log('📚 Test 4: Fetching all quizzes...');
             document.getElementById('testResults').innerHTML += '<p>4. Testar hämta alla quizer...</p>';
             await getAllQuizzes();
             
             // Test 5: Lägg Till Fråga
+            console.log('❓ Test 5: Adding question...');
             document.getElementById('testResults').innerHTML += '<p>5. Testar lägg till fråga...</p>';
             await addQuestionToQuiz();
             
             // Test 6: Hämta Quiz Frågor
+            console.log('📋 Test 6: Fetching quiz questions...');
             document.getElementById('testResults').innerHTML += '<p>6. Testar hämta quiz frågor...</p>';
             await getQuizQuestions();
             
+            console.log('🎉 All API tests completed successfully!', { timestamp: new Date().toISOString() });
             document.getElementById('testResults').innerHTML += '<p>Alla tester slutförda!</p>';
         }
     </script>
