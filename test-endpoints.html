@@ -110,12 +110,27 @@
                 options.body = JSON.stringify(body);
             }
 
+            // Log the API call details
+            console.log(`🌐 API Call: ${method} ${url}`, {
+                endpoint,
+                method,
+                body: body || 'no body',
+                requiresAuth,
+                hasAuthToken: !!authToken
+            });
+
             try {
                 const response = await fetch(url, options);
                 const data = await response.json();
-                return { success: response.ok, data: data, status: response.status };
+                const result = { success: response.ok, data: data, status: response.status };
+                
+                console.log(`🌐 API Response (${response.status}):`, result);
+                
+                return result;
             } catch (error) {
-                return { success: false, error: error.message };
+                const errorResult = { success: false, error: error.message };
+                console.error('🌐 API Error:', errorResult);
+                return errorResult;
             }
         }
 
@@ -134,7 +149,15 @@
             const name = document.getElementById('userName').value;
             const email = document.getElementById('userEmail').value;
             
+            console.log('🚀 Creating user:', { name, email });
             const result = await makeApiCall('/user', 'POST', { name, email });
+            
+            if (result.success) {
+                console.log('✅ User created successfully:', result.data);
+            } else {
+                console.error('❌ Failed to create user:', result.error || result.data);
+            }
+            
             displayResult('createUserResult', result);
         }
 
@@ -142,11 +165,17 @@
             const email = document.getElementById('loginEmail').value;
             const name = document.getElementById('loginName').value;
             
+            console.log('🔑 Logging in user:', { email, name });
             const result = await makeApiCall('/login', 'POST', { email, name });
+            
             if (result.success && result.data.data && result.data.data.token) {
                 authToken = result.data.data.token;
+                console.log('✅ User logged in successfully, token saved:', result.data);
                 document.getElementById('testResults').innerHTML += '<p>Auth token sparad!</p>';
+            } else {
+                console.error('❌ Failed to login user:', result.error || result.data);
             }
+            
             displayResult('loginUserResult', result);
         }
 
@@ -156,23 +185,46 @@
             const description = document.getElementById('quizDescription').value;
             const createdBy = document.getElementById('quizCreatedBy').value;
             
+            console.log('📝 Creating quiz:', { title, description, createdBy });
             const result = await makeApiCall('/quiz', 'POST', { title, description, createdBy }, true);
+            
             if (result.success && result.data.data && result.data.data.quizId) {
+                console.log('✅ Quiz created successfully:', result.data);
                 document.getElementById('questionQuizId').value = result.data.data.quizId;
                 document.getElementById('deleteQuizId').value = result.data.data.quizId;
                 document.getElementById('getQuestionsQuizId').value = result.data.data.quizId;
+            } else {
+                console.error('❌ Failed to create quiz:', result.error || result.data);
             }
+            
             displayResult('createQuizResult', result);
         }
 
         async function getAllQuizzes() {
+            console.log('📋 Getting all quizzes...');
             const result = await makeApiCall('/quizzes', 'GET');
+            
+            if (result.success) {
+                console.log('✅ Retrieved quizzes successfully:', result.data);
+            } else {
+                console.error('❌ Failed to get quizzes:', result.error || result.data);
+            }
+            
             displayResult('getAllQuizzesResult', result);
         }
 
         async function deleteQuiz() {
             const quizId = document.getElementById('deleteQuizId').value;
+            
+            console.log('🗑️ Deleting quiz:', { quizId });
             const result = await makeApiCall(`/quiz/${quizId}`, 'DELETE', null, true);
+            
+            if (result.success) {
+                console.log('✅ Quiz deleted successfully:', result.data);
+            } else {
+                console.error('❌ Failed to delete quiz:', result.error || result.data);
+            }
+            
             displayResult('deleteQuizResult', result);
         }
 
@@ -185,19 +237,38 @@
             const latitude = document.getElementById('latitude').value;
             const longitude = document.getElementById('longitude').value;
             
-            const result = await makeApiCall(`/quiz/${quizId}/question`, 'POST', { 
+            const questionData = { 
                 question, 
                 options, 
                 correctAnswer,
                 latitude,
                 longitude
-            }, true);
+            };
+            
+            console.log('➕ Adding question to quiz:', { quizId, ...questionData });
+            const result = await makeApiCall(`/quiz/${quizId}/question`, 'POST', questionData, true);
+            
+            if (result.success) {
+                console.log('✅ Question added successfully:', result.data);
+            } else {
+                console.error('❌ Failed to add question:', result.error || result.data);
+            }
+            
             displayResult('addQuestionResult', result);
         }
 
         async function getQuizQuestions() {
             const quizId = document.getElementById('getQuestionsQuizId').value;
+            
+            console.log('❓ Getting quiz questions:', { quizId });
             const result = await makeApiCall(`/quiz/${quizId}/questions`, 'GET');
+            
+            if (result.success) {
+                console.log('✅ Retrieved quiz questions successfully:', result.data);
+            } else {
+                console.error('❌ Failed to get quiz questions:', result.error || result.data);
+            }
+            
             displayResult('getQuestionsResult', result);
         }
 
@@ -206,47 +277,74 @@
             const quizId = document.getElementById('scoreQuizId').value;
             const score = document.getElementById('scoreValue').value;
             
-            const result = await makeApiCall(`/quiz/${quizId}/score`, 'POST', { 
+            const scoreData = { 
                 quizId,
                 score: parseInt(score)
-            }, true);
+            };
+            
+            console.log('🏆 Registering score:', scoreData);
+            const result = await makeApiCall(`/quiz/${quizId}/score`, 'POST', scoreData, true);
+            
+            if (result.success) {
+                console.log('✅ Score registered successfully:', result.data);
+            } else {
+                console.error('❌ Failed to register score:', result.error || result.data);
+            }
+            
             displayResult('registerScoreResult', result);
         }
 
         async function getLeaderboard() {
             const quizId = document.getElementById('leaderboardQuizId').value;
+            
+            console.log('🥇 Getting leaderboard:', { quizId });
             const result = await makeApiCall(`/quiz/${quizId}/leaderboard`, 'GET');
+            
+            if (result.success) {
+                console.log('✅ Retrieved leaderboard successfully:', result.data);
+            } else {
+                console.error('❌ Failed to get leaderboard:', result.error || result.data);
+            }
+            
             displayResult('getLeaderboardResult', result);
         }
 
         // Testa alla endpoints funktion
         async function testAllEndpoints() {
+            console.log('🧪 Starting comprehensive API test suite...');
             document.getElementById('testResults').innerHTML = '<h3>Kör alla tester...</h3>';
             
             // Test 1: Skapa Användare
+            console.log('🧪 Test 1/6: Creating user...');
             document.getElementById('testResults').innerHTML += '<p>1. Testar skapa användare...</p>';
             await createUser();
             
             // Test 2: Logga In Användare
+            console.log('🧪 Test 2/6: Logging in user...');
             document.getElementById('testResults').innerHTML += '<p>2. Testar logga in användare...</p>';
             await loginUser();
             
             // Test 3: Skapa Quiz
+            console.log('🧪 Test 3/6: Creating quiz...');
             document.getElementById('testResults').innerHTML += '<p>3. Testar skapa quiz...</p>';
             await createQuiz();
             
             // Test 4: Hämta Alla Quizer
+            console.log('🧪 Test 4/6: Getting all quizzes...');
             document.getElementById('testResults').innerHTML += '<p>4. Testar hämta alla quizer...</p>';
             await getAllQuizzes();
             
             // Test 5: Lägg Till Fråga
+            console.log('🧪 Test 5/6: Adding question...');
             document.getElementById('testResults').innerHTML += '<p>5. Testar lägg till fråga...</p>';
             await addQuestionToQuiz();
             
             // Test 6: Hämta Quiz Frågor
+            console.log('🧪 Test 6/6: Getting quiz questions...');
             document.getElementById('testResults').innerHTML += '<p>6. Testar hämta quiz frågor...</p>';
             await getQuizQuestions();
             
+            console.log('🎉 All API tests completed!');
             document.getElementById('testResults').innerHTML += '<p>Alla tester slutförda!</p>';
         }
     </script>
