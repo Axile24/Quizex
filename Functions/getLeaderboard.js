@@ -4,7 +4,7 @@
  */
 
 const middy = require('@middy/core');
-const { QueryCommand } = require('@aws-sdk/lib-dynamodb');
+const { ScanCommand } = require('@aws-sdk/lib-dynamodb');
 const { success, error } = require('../response');
 const { db } = require('../database/database');
 
@@ -19,21 +19,22 @@ const getLeaderboard = async (event) => {
       return error('Quiz ID is required');
     }
 
-    // Get all scores for this quiz, sorted by score (highest first)
-    const queryScoresCommand = new QueryCommand({
+    // Scan scores table and filter by quizId
+    const scanScoresCommand = new ScanCommand({
       TableName: 'scores',
-      IndexName: 'quizId-index',
-      KeyConditionExpression: 'quizId = :quizId',
+      FilterExpression: 'quizId = :quizId',
       ExpressionAttributeValues: {
         ':quizId': quizId
-      },
-      ScanIndexForward: false // Sort by score descending
+      }
     });
 
-    const result = await db.send(queryScoresCommand);
+    const result = await db.send(scanScoresCommand);
+
+    // Handle empty results
+    const items = result.Items || [];
 
     // Sort by score (highest first) and limit to top 10
-    const leaderboard = result.Items
+    const leaderboard = items
       .sort((a, b) => b.score - a.score)
       .slice(0, 10)
       .map((item, index) => ({
