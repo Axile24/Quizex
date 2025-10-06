@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <title>QuizEx API Test</title>
+</head>
+<body>
+    <h1>QuizEx API Test Interface</h1>
+    <p>API URL: <span id="apiUrl">https://your-api-url.amazonaws.com</span></p>
+    
+    <div>
+        <h3>1. Användarhantering</h3>
+        
+        <h3>Skapa Användare</h3>
+        <input type="text" id="userName" placeholder="Användarnamn" value="Test Användare">
+        <input type="email" id="userEmail" placeholder="E-post" value="test@example.com">
+        <button onclick="createUser()">Skapa Användare</button>
+        <div id="createUserResult"></div>
+        
+        <h3>Logga In</h3>
+        <input type="email" id="loginEmail" placeholder="E-post" value="test@example.com">
+        <input type="text" id="loginName" placeholder="Namn" value="Test Användare">
+        <button onclick="loginUser()">Logga In</button>
+        <div id="loginUserResult"></div>
+    </div>
+
+    <div>
+        <h2>2. Quizhantering</h2>
+        
+        <h3>Skapa Quiz</h3>
+        <input type="text" id="quizTitle" placeholder="Quiz Titel" value="Test Quiz">
+        <input type="text" id="quizDescription" placeholder="Beskrivning" value="En test quiz">
+        <input type="text" id="quizCreatedBy" placeholder="Skapad av" value="test@example.com">
+        <button onclick="createQuiz()">Skapa Quiz</button>
+        <div id="createQuizResult"></div>
+        
+        <h3>Hämta Alla Quizer</h3>
+        <button onclick="getAllQuizzes()">Hämta Alla Quizer</button>
+        <div id="getAllQuizzesResult"></div>
+        
+        <h3>Ta Bort Quiz</h3>
+        <input type="text" id="deleteQuizId" placeholder="Quiz ID">
+        <button onclick="deleteQuiz()">Ta Bort Quiz</button>
+        <div id="deleteQuizResult"></div>
+    </div>
+
+    <div>
+        <h2>3. Frågehantering</h2>
+        
+        <h3>Lägg Till Fråga</h3>
+        <input type="text" id="questionQuizId" placeholder="Quiz ID">
+        <input type="text" id="questionText" placeholder="Fråga" value="Vad är 2+2?">
+        <input type="text" id="questionOptions" placeholder="Alternativ (kommaseparerade)" value="3,4,5,6">
+        <input type="text" id="correctAnswer" placeholder="Rätt svar" value="4">
+        <input type="number" id="latitude" placeholder="Latitud" value="59.3293" step="any">
+        <input type="number" id="longitude" placeholder="Longitud" value="18.0686" step="any">
+        <button onclick="addQuestionToQuiz()">Lägg Till Fråga</button>
+        <div id="addQuestionResult"></div>
+        
+        <h3>Hämta Quiz Frågor</h3>
+        <input type="text" id="getQuestionsQuizId" placeholder="Quiz ID">
+        <button onclick="getQuizQuestions()">Hämta Frågor</button>
+        <div id="getQuestionsResult"></div>
+    </div>
+
+    <div>
+        <h2>4. Leaderboard</h2>
+        
+        <h3>Registrera Poäng</h3>
+        <input type="text" id="scoreQuizId" placeholder="Quiz ID">
+        <input type="number" id="scoreValue" placeholder="Poäng" value="100">
+        <button onclick="registerScore()">Registrera Poäng</button>
+        <div id="registerScoreResult"></div>
+        
+        <h3>Hämta Leaderboard</h3>
+        <input type="text" id="leaderboardQuizId" placeholder="Quiz ID">
+        <button onclick="getLeaderboard()">Hämta Leaderboard</button>
+        <div id="getLeaderboardResult"></div>
+    </div>
+
+    <div>
+        <h2>5. Testresultat</h2>
+        <div id="testResults"></div>
+    </div>
+
+    <script>
+        let apiBaseUrl = 'https://zdgjj51feh.execute-api.eu-north-1.amazonaws.com';
+        let authToken = '';
+
+        // Uppdatera API URL när sidan laddas
+        window.onload = function() {
+            document.getElementById('apiUrl').textContent = apiBaseUrl;
+        };
+
+        // Hjälpfunktion för API-anrop
+        async function makeApiCall(endpoint, method = 'GET', body = null, requiresAuth = false) {
+            const url = `${apiBaseUrl}${endpoint}`;
+            const options = {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+
+            if (requiresAuth && authToken) {
+                options.headers['Authorization'] = `Bearer ${authToken}`;
+            }
+
+            if (body) {
+                options.body = JSON.stringify(body);
+            }
+
+            console.log(`Making ${method} request to ${url}`, body ? { body } : '');
+
+            try {
+                const response = await fetch(url, options);
+                const data = await response.json();
+                console.log(`API response (${response.status}):`, data);
+                return { success: response.ok, data: data, status: response.status };
+            } catch (error) {
+                console.log('API call error:', error.message);
+                return { success: false, error: error.message };
+            }
+        }
+
+        // Hjälpfunktion för att visa resultat
+        function displayResult(elementId, result) {
+            const element = document.getElementById(elementId);
+            if (result.success) {
+                element.innerHTML = `<pre>${JSON.stringify(result.data, null, 2)}</pre>`;
+            } else {
+                element.innerHTML = `<pre>Fel: ${result.error || JSON.stringify(result.data, null, 2)}</pre>`;
+            }
+        }
+
+        // Användarhanteringsfunktioner
+        async function createUser() {
+            const name = document.getElementById('userName').value;
+            const email = document.getElementById('userEmail').value;
+            
+            console.log('Creating user:', { name, email });
+            const result = await makeApiCall('/user', 'POST', { name, email });
+            console.log('User creation result:', result);
+            displayResult('createUserResult', result);
+        }
+
+        async function loginUser() {
+            const email = document.getElementById('loginEmail').value;
+            const name = document.getElementById('loginName').value;
+            
+            console.log('Logging in user:', { email, name });
+            const result = await makeApiCall('/login', 'POST', { email, name });
+            if (result.success && result.data.data && result.data.data.token) {
+                authToken = result.data.data.token;
+                console.log('Auth token received and stored');
+                document.getElementById('testResults').innerHTML += '<p>Auth token sparad!</p>';
+            }
+            console.log('Login result:', result);
+            displayResult('loginUserResult', result);
+        }
+
+        // Quizhanteringsfunktioner
+        async function createQuiz() {
+            const title = document.getElementById('quizTitle').value;
+            const description = document.getElementById('quizDescription').value;
+            const createdBy = document.getElementById('quizCreatedBy').value;
+            
+            console.log('Creating quiz:', { title, description, createdBy });
+            const result = await makeApiCall('/quiz', 'POST', { title, description, createdBy }, true);
+            if (result.success && result.data.data && result.data.data.quizId) {
+                console.log('Quiz created with ID:', result.data.data.quizId);
+                document.getElementById('questionQuizId').value = result.data.data.quizId;
+                document.getElementById('deleteQuizId').value = result.data.data.quizId;
+                document.getElementById('getQuestionsQuizId').value = result.data.data.quizId;
+            }
+            console.log('Quiz creation result:', result);
+            displayResult('createQuizResult', result);
+        }
+
+        async function getAllQuizzes() {
+            console.log('Getting all quizzes...');
+            const result = await makeApiCall('/quizzes', 'GET');
+            console.log('All quizzes result:', result);
+            displayResult('getAllQuizzesResult', result);
+        }
+
+        async function deleteQuiz() {
+            const quizId = document.getElementById('deleteQuizId').value;
+            console.log('Deleting quiz with ID:', quizId);
+            const result = await makeApiCall(`/quiz/${quizId}`, 'DELETE', null, true);
+            console.log('Quiz deletion result:', result);
+            displayResult('deleteQuizResult', result);
+        }
+
+        // Frågehanteringsfunktioner
+        async function addQuestionToQuiz() {
+            const quizId = document.getElementById('questionQuizId').value;
+            const question = document.getElementById('questionText').value;
+            const options = document.getElementById('questionOptions').value.split(',').map(opt => opt.trim());
+            const correctAnswer = document.getElementById('correctAnswer').value;
+            const latitude = document.getElementById('latitude').value;
+            const longitude = document.getElementById('longitude').value;
+            
+            console.log('Adding question to quiz:', { quizId, question, options, correctAnswer, latitude, longitude });
+            const result = await makeApiCall(`/quiz/${quizId}/question`, 'POST', { 
+                question, 
+                options, 
+                correctAnswer,
+                latitude,
+                longitude
+            }, true);
+            console.log('Add question result:', result);
+            displayResult('addQuestionResult', result);
+        }
+
+        async function getQuizQuestions() {
+            const quizId = document.getElementById('getQuestionsQuizId').value;
+            console.log('Getting quiz questions for quiz ID:', quizId);
+            const result = await makeApiCall(`/quiz/${quizId}/questions`, 'GET');
+            console.log('Quiz questions result:', result);
+            displayResult('getQuestionsResult', result);
+        }
+
+        // Leaderboard-funktioner
+        async function registerScore() {
+            const quizId = document.getElementById('scoreQuizId').value;
+            const score = document.getElementById('scoreValue').value;
+            
+            console.log('Registering score:', { quizId, score: parseInt(score) });
+            const result = await makeApiCall(`/quiz/${quizId}/score`, 'POST', { 
+                quizId,
+                score: parseInt(score)
+            }, true);
+            console.log('Register score result:', result);
+            displayResult('registerScoreResult', result);
+        }
+
+        async function getLeaderboard() {
+            const quizId = document.getElementById('leaderboardQuizId').value;
+            console.log('Getting leaderboard for quiz ID:', quizId);
+            const result = await makeApiCall(`/quiz/${quizId}/leaderboard`, 'GET');
+            console.log('Leaderboard result:', result);
+            displayResult('getLeaderboardResult', result);
+        }
+
+        // Testa alla endpoints funktion
+        async function testAllEndpoints() {
+            console.log('Starting automated testing of all endpoints...');
+            document.getElementById('testResults').innerHTML = '<h3>Kör alla tester...</h3>';
+            
+            // Test 1: Skapa Användare
+            document.getElementById('testResults').innerHTML += '<p>1. Testar skapa användare...</p>';
+            await createUser();
+            
+            // Test 2: Logga In Användare
+            document.getElementById('testResults').innerHTML += '<p>2. Testar logga in användare...</p>';
+            await loginUser();
+            
+            // Test 3: Skapa Quiz
+            document.getElementById('testResults').innerHTML += '<p>3. Testar skapa quiz...</p>';
+            await createQuiz();
+            
+            // Test 4: Hämta Alla Quizer
+            document.getElementById('testResults').innerHTML += '<p>4. Testar hämta alla quizer...</p>';
+            await getAllQuizzes();
+            
+            // Test 5: Lägg Till Fråga
+            document.getElementById('testResults').innerHTML += '<p>5. Testar lägg till fråga...</p>';
+            await addQuestionToQuiz();
+            
+            // Test 6: Hämta Quiz Frågor
+            document.getElementById('testResults').innerHTML += '<p>6. Testar hämta quiz frågor...</p>';
+            await getQuizQuestions();
+            
+            console.log('All automated tests completed!');
+            document.getElementById('testResults').innerHTML += '<p>Alla tester slutförda!</p>';
+        }
+    </script>
+
+    <div>
+        <h2>6. Snabbtest</h2>
+        <button onclick="testAllEndpoints()">Testa Alla Endpoints</button>
+    </div>
+
+    <div>
+        <h2>7. Instruktioner</h2>
+        <ol>
+            <li>API URL är redan konfigurerad: https://zdgjj51feh.execute-api.eu-north-1.amazonaws.com</li>
+            <li>Öppna: http://localhost:3000/test-endpoints.html</li>
+            <li>Skapa först en användare och logga in för att få auth token</li>
+            <li>Skapa en quiz (kräver auth token)</li>
+            <li>Lägg till frågor till quizen (kräver auth token)</li>
+            <li>Testa att hämta quizer och frågor (ingen auth krävs)</li>
+            <li>Använd "Testa Alla Endpoints" för automatiserad testning</li>
+        </ol>
+    </div>
+</body>
+</html>
