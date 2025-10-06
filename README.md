@@ -1,13 +1,13 @@
 # QuizEx
 Individuell examinations uppgift 
 
-## lambdas logik
+## lambdas
 
 Användarhantering**: Registrera, logga in och hantera användare
 Quiz-system**: Skapa, spela och hantera quizer
 Frågehantering**: Lägg till frågor med koordinater
 Poängspårning**: Registrera poäng och visa topplistor
-Interaktiv quiz-spelare**: Spela quiz med 3 JavaScript-frågor om möjligt
+
 
 
 
