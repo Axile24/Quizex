@@ -92,6 +92,14 @@ const unauthorized = (message = 'Unauthorized') => {
     .build();
 };
 
+const sendError = (statusCode = HTTP_STATUS.BAD_REQUEST, message = 'Error occurred') => {
+  return new ResponseBuilder()
+    .setStatus(statusCode)
+    .setSuccess(false)
+    .setMessage(message)
+    .build();
+};
+
 // Alternative: Arrow functions with object destructuring
 const createResponse = ({ statusCode = HTTP_STATUS.OK, data = null, message = '', success = true }) => {
   return {
@@ -107,6 +115,7 @@ module.exports = {
   error,
   notFound,
   unauthorized,
+  sendError,
   createResponse,
   HTTP_STATUS
 };
